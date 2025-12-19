@@ -22,6 +22,7 @@ const Admin = () => {
     description: '',
     order_id: 1,
     imageFile: null,
+    videoFile: null,
   })
 
   const handleLogin = (e) => {
@@ -37,18 +38,22 @@ const Admin = () => {
     }
   }
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, imageFile: e.target.files[0] })
+  const handleImageChange = (e) => {
+    setFormData({ ...formData, imageFile: e.target.files[0], videoFile: null })
   }
 
-  const uploadImage = async (file) => {
+  const handleVideoChange = (e) => {
+    setFormData({ ...formData, videoFile: e.target.files[0], imageFile: null })
+  }
+
+  const uploadFile = async (file, type = 'image') => {
     try {
       if (!supabase) {
         throw new Error('Supabase bağlantısı yok. Lütfen .env dosyasını kontrol edin.')
       }
 
       const fileExt = file.name.split('.').pop()
-      const fileName = `${Math.random()}.${fileExt}`
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
       const filePath = `memories/${fileName}`
 
       const { error: uploadError } = await supabase.storage
@@ -63,7 +68,7 @@ const Admin = () => {
 
       return data.publicUrl
     } catch (error) {
-      console.error('Error uploading image:', error)
+      console.error(`Error uploading ${type}:`, error)
       throw error
     }
   }
@@ -75,9 +80,18 @@ const Admin = () => {
 
     try {
       let imageUrl = ''
+      let videoUrl = ''
 
       if (formData.imageFile) {
-        imageUrl = await uploadImage(formData.imageFile)
+        imageUrl = await uploadFile(formData.imageFile, 'image')
+      }
+
+      if (formData.videoFile) {
+        videoUrl = await uploadFile(formData.videoFile, 'video')
+      }
+
+      if (!formData.imageFile && !formData.videoFile) {
+        throw new Error('Lütfen bir fotoğraf veya video seçin')
       }
 
       if (!supabase) {
@@ -92,7 +106,8 @@ const Admin = () => {
             title: formData.title,
             description: formData.description,
             order_id: formData.order_id,
-            image_url: imageUrl,
+            image_url: imageUrl || null,
+            video_url: videoUrl || null,
           },
         ])
 
@@ -105,11 +120,12 @@ const Admin = () => {
         description: '',
         order_id: 1,
         imageFile: null,
+        videoFile: null,
       })
       
-      // Reset file input
-      const fileInput = document.querySelector('input[type="file"]')
-      if (fileInput) fileInput.value = ''
+      // Reset file inputs
+      const fileInputs = document.querySelectorAll('input[type="file"]')
+      fileInputs.forEach(input => input.value = '')
     } catch (error) {
       console.error('Error adding memory:', error)
       setMessage(`Hata: ${error.message}`)
@@ -259,24 +275,49 @@ const Admin = () => {
 
             <div>
               <label className="block text-romantic-deepRed font-semibold mb-2">
-                Fotoğraf
+                Fotoğraf veya Video
               </label>
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-romantic-rose to-romantic-pink text-white rounded-lg cursor-pointer hover:shadow-lg transition-shadow">
-                  <Upload className="w-5 h-5" />
-                  <span>Fotoğraf Seç</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                </label>
+              <div className="space-y-3">
+                <div className="flex items-center gap-4 flex-wrap">
+                  <label className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-romantic-rose to-romantic-pink text-white rounded-lg cursor-pointer hover:shadow-lg transition-shadow">
+                    <Upload className="w-5 h-5" />
+                    <span>Fotoğraf Seç</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </label>
+                  <label className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-romantic-pink to-romantic-rose text-white rounded-lg cursor-pointer hover:shadow-lg transition-shadow">
+                    <Upload className="w-5 h-5" />
+                    <span>Video Seç</span>
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoChange}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
                 {formData.imageFile && (
-                  <span className="text-romantic-deepRed">
-                    {formData.imageFile.name}
-                  </span>
+                  <div className="flex items-center gap-2 text-romantic-deepRed bg-romantic-pink/20 p-2 rounded">
+                    <span className="text-sm">📷 Fotoğraf:</span>
+                    <span className="text-sm font-medium">{formData.imageFile.name}</span>
+                  </div>
                 )}
+                {formData.videoFile && (
+                  <div className="flex items-center gap-2 text-romantic-deepRed bg-romantic-pink/20 p-2 rounded">
+                    <span className="text-sm">🎥 Video:</span>
+                    <span className="text-sm font-medium">{formData.videoFile.name}</span>
+                    <span className="text-xs text-romantic-deepRed/60">
+                      ({(formData.videoFile.size / 1024 / 1024).toFixed(2)} MB)
+                    </span>
+                  </div>
+                )}
+                <p className="text-xs text-romantic-deepRed/60">
+                  💡 Not: Fotoğraf veya video seçebilirsiniz. Video seçildiğinde otomatik olarak sürekli oynatılacak.
+                </p>
               </div>
             </div>
 

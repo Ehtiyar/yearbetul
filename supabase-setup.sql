@@ -3,11 +3,15 @@ CREATE TABLE IF NOT EXISTS memories (
   id BIGSERIAL PRIMARY KEY,
   month TEXT NOT NULL,
   image_url TEXT,
+  video_url TEXT,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   order_id INTEGER NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
+
+-- If table already exists, add video_url column
+ALTER TABLE memories ADD COLUMN IF NOT EXISTS video_url TEXT;
 
 -- Create a storage bucket for images (run this in Supabase Storage section)
 -- Bucket name: memories
