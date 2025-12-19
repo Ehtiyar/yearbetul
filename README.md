@@ -87,6 +87,14 @@ betul-year-in-review/
 └── package.json
 ```
 
+## Netlify Deployment
+
+Bu proje Netlify'da deploy edilmeye hazırdır. İki dosya otomatik olarak route'ları yönetir:
+- `public/_redirects` - Tüm route'ları index.html'e yönlendirir
+- `netlify.toml` - Build ayarları ve redirect kuralları
+
+**Önemli:** Deploy sonrası environment variables'ı Netlify dashboard'dan eklemeyi unutmayın! (Bkz: `NETLIFY_SETUP.md`)
+
 ## Customization
 
 - **Love Note:** Edit the text in `src/components/LoveNote.jsx`
