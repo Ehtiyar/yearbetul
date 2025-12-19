@@ -26,11 +26,14 @@ const Admin = () => {
 
   const handleLogin = (e) => {
     e.preventDefault()
-    if (password === ADMIN_PASSWORD) {
+    const trimmedPassword = password.trim()
+    if (trimmedPassword === ADMIN_PASSWORD) {
       setIsAuthenticated(true)
       setMessage('')
+      setPassword('')
     } else {
-      setMessage('Yanlış şifre!')
+      setMessage('Yanlış şifre! Lütfen tekrar deneyin.')
+      setPassword('')
     }
   }
 
@@ -124,33 +127,55 @@ const Admin = () => {
           className="glass-effect rounded-2xl p-8 md:p-12 max-w-md w-full shadow-2xl"
         >
           <div className="text-center mb-6">
-            <Lock className="w-12 h-12 text-romantic-rose mx-auto mb-4" />
+            <motion.div
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Lock className="w-12 h-12 text-romantic-rose mx-auto mb-4" />
+            </motion.div>
             <h1 className="text-3xl font-bold text-romantic-deepRed mb-2">
               Admin Girişi
             </h1>
-            <p className="text-romantic-deepRed/80">
+            <p className="text-romantic-deepRed/80 mb-2">
               Anı eklemek için şifrenizi girin
+            </p>
+            <p className="text-xs text-romantic-deepRed/60">
+              Şifre: <span className="font-mono bg-romantic-pink/30 px-2 py-1 rounded">betul2025</span>
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Şifre"
-              className="w-full px-4 py-3 rounded-lg border-2 border-romantic-pink focus:border-romantic-rose focus:outline-none text-romantic-deepRed"
-              required
-            />
+            <div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  setMessage('')
+                }}
+                placeholder="Şifre girin"
+                className="w-full px-4 py-3 rounded-lg border-2 border-romantic-pink focus:border-romantic-rose focus:outline-none text-romantic-deepRed transition-all"
+                required
+                autoFocus
+              />
+            </div>
             {message && (
-              <p className="text-red-600 text-sm">{message}</p>
+              <motion.p 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-red-600 text-sm text-center bg-red-50 p-2 rounded"
+              >
+                {message}
+              </motion.p>
             )}
-            <button
+            <motion.button
               type="submit"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               className="w-full bg-gradient-to-r from-romantic-rose to-romantic-pink text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-shadow"
             >
               Giriş Yap
-            </button>
+            </motion.button>
           </form>
         </motion.div>
       </div>

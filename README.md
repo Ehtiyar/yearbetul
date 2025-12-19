@@ -17,11 +17,15 @@ npm install
    - Project URL
    - Anon/public key
 
-3. Create a `.env` file in the root directory:
+3. **For Local Development:** Create a `.env` file in the root directory:
 ```env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
+
+**⚠️ Important:** `.env` dosyası `.gitignore`'da olduğu için GitHub'a yüklenmez (güvenlik için doğru).
+
+**For Netlify Deployment:** See `NETLIFY_SETUP.md` for instructions on setting environment variables in Netlify dashboard.
 
 ### 3. Set Up Database
 
