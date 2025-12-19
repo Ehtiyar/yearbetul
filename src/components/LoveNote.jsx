@@ -6,10 +6,11 @@ const LoveNote = () => {
     <section className="py-20 px-4 z-10 relative">
       <div className="max-w-4xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 50, scale: 0.95 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
+          whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
           className="glass-effect rounded-3xl p-8 md:p-12 shadow-2xl"
         >
           <div className="flex items-center justify-center mb-6">

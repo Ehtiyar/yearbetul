@@ -40,6 +40,10 @@ const Admin = () => {
 
   const uploadImage = async (file) => {
     try {
+      if (!supabase) {
+        throw new Error('Supabase bağlantısı yok. Lütfen .env dosyasını kontrol edin.')
+      }
+
       const fileExt = file.name.split('.').pop()
       const fileName = `${Math.random()}.${fileExt}`
       const filePath = `memories/${fileName}`
@@ -71,6 +75,10 @@ const Admin = () => {
 
       if (formData.imageFile) {
         imageUrl = await uploadImage(formData.imageFile)
+      }
+
+      if (!supabase) {
+        throw new Error('Supabase bağlantısı yok. Lütfen .env dosyasını kontrol edin.')
       }
 
       const { error } = await supabase

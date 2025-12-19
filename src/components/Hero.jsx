@@ -55,13 +55,28 @@ const Hero = () => {
             <Heart className="w-16 h-16 text-romantic-rose mx-auto fill-romantic-rose" />
           </motion.div>
           
-          <h1 className="text-5xl md:text-7xl font-bold text-romantic-deepRed mb-4 text-shadow-romantic">
+          <motion.h1 
+            className="text-5xl md:text-7xl font-bold text-romantic-deepRed mb-4 text-shadow-romantic"
+            animate={{ 
+              textShadow: [
+                "2px 2px 4px rgba(0, 0, 0, 0.1)",
+                "2px 2px 20px rgba(255, 105, 180, 0.5)",
+                "2px 2px 4px rgba(0, 0, 0, 0.1)"
+              ]
+            }}
+            transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
+          >
             Hoş Geldin Betül
-          </h1>
+          </motion.h1>
           
-          <p className="text-2xl md:text-3xl text-romantic-deepRed/80 mb-12 font-light">
+          <motion.p 
+            className="text-2xl md:text-3xl text-romantic-deepRed/80 mb-12 font-light"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+          >
             Seninle geçen harika bir yılın hikayesi...
-          </p>
+          </motion.p>
         </motion.div>
 
         <motion.div
@@ -78,14 +93,21 @@ const Hero = () => {
             {countdownItems.map((item, index) => (
               <motion.div
                 key={item.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.7 + index * 0.1 }}
-                className="bg-gradient-to-br from-romantic-pink to-romantic-rose rounded-xl p-4 md:p-6 shadow-lg"
+                initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ delay: 0.7 + index * 0.1, type: "spring", stiffness: 200 }}
+                whileHover={{ scale: 1.1, rotate: 5, transition: { duration: 0.2 } }}
+                className="bg-gradient-to-br from-romantic-pink to-romantic-rose rounded-xl p-4 md:p-6 shadow-lg cursor-pointer"
               >
-                <div className="text-3xl md:text-5xl font-bold text-white mb-2">
+                <motion.div 
+                  key={item.value}
+                  initial={{ scale: 1.2, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-3xl md:text-5xl font-bold text-white mb-2"
+                >
                   {String(item.value).padStart(2, '0')}
-                </div>
+                </motion.div>
                 <div className="text-sm md:text-base text-white/90 font-medium">
                   {item.label}
                 </div>
